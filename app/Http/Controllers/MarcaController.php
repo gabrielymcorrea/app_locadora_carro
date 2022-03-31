@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Marca;
-use App\Repository\MarcaRepository;
+use App\Repositories\MarcaRepository;
 
 class MarcaController extends Controller{
     //Marca(modal)Injeção do modal MarcaController(Controller),
@@ -30,7 +30,7 @@ class MarcaController extends Controller{
 
             $marcaRepository->selectSubAtributos($atributo_modelos);
         }else{
-            $marcaRepository->selectAtributos('modelos');
+            $marcaRepository->selectSubAtributos('modelos');
         }
 
         //filtro

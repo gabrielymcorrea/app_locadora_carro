@@ -8,4 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 class Carro extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['modelo_id','placa','disponivel','km'];
+
+    public function rules(){
+        return [
+            'modelo_id' => 'exists:modelos,id', 
+            'placa' => 'required',
+            'disponivel' =>'required|boolean',
+            'km' => 'required|integer', 
+        ];
+    }
+
+    public function feedback(){
+        return [
+            'placa.unique' => 'Placa já existe',
+        ];
+    }
+
+    public function modelo(){
+        //uma carro um modelo
+
+        return $this->belongsTo('App\Models\Modelo');
+    }
+
 }

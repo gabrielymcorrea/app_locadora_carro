@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Modelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Repository\ModeloRepository;
+use App\Repositories\ModeloRepository;
 
 class ModeloController extends Controller{
 
@@ -26,7 +26,7 @@ class ModeloController extends Controller{
 
             $modeloRepository->selectSubAtributos($atributo_marcas);
         }else{
-            $modeloRepository->selectAtributos('marca');
+            $modeloRepository->selectSubAtributos('marca');
         }
 
         //filtro

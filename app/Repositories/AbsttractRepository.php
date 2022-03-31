@@ -1,12 +1,10 @@
-<?php
+<?php 
 
-namespace App\Repository;
+namespace App\Repositories;
 use Illuminate\Database\Eloquent\Model;
 
 
-
-class ModeloRepository {
-
+abstract class AbsttractRepository{
     public function __construct(Model $model) {
         $this->model = $model;
     }
