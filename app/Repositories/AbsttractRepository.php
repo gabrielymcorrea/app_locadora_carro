@@ -31,4 +31,8 @@ abstract class AbsttractRepository{
     public function getResultado(){
         return  $this->model->get();
     }
+
+    public function getResultadoPaginado($numRegistro){
+        return  $this->model->paginate($numRegistro);
+    }
 }
