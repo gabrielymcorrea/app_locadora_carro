@@ -1,6 +1,6 @@
 <template>
     <div :class="estilo" role="alert">
-        <strong>{{titulo}}</strong>{{detalhe.message}}
+        <strong>{{titulo}} </strong>{{detalhe.mensagem}}
         <ul v-if="detalhe.dados">
             <li v-for="e, key in detalhe.dados" :key="key">{{e[0]}}</li>
         </ul>
