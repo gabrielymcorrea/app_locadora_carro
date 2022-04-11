@@ -109,7 +109,7 @@ class MarcaController extends Controller{
                     $regrasDinamicas[$input] = $regra;
                 }
             }
-
+ 
             $request->validate($regrasDinamicas, $marca->feedback());
         }else{
             $request->validate($marca->rules(), $marca->feedback()); //esse marca e da marca que foi recuperado do id.

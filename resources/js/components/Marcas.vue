@@ -158,7 +158,7 @@
 
             <template v-slot:conteudo v-if="$store.state.transacao.status != 'sucesso'">
                 <inputContainer-component titulo="Nome da marca" id="atualizarNome" id-help="atualizarNomeHelp">
-                    <input type="text" class="form-control"  id="atualizarNome" aria-describedby="atualizarNomeHelp" :value="$store.state.item.nome">
+                    <input type="text" class="form-control"  id="atualizarNome" aria-describedby="atualizarNomeHelp" v-model="$store.state.item.nome">
                 </inputContainer-component>
 
                 <inputContainer-component titulo="Nova imagem" id="atualizarImagem" id-help="atualizarImagemHelp" texto-ajuda="Selecione uma imagem no formato PNG">
@@ -178,19 +178,6 @@
     import moment from 'moment';
     export default {
     components: { Paginate },
-        computed: {
-            token() {
-
-                let token = document.cookie.split(';').find(indice => {
-                    return indice.includes('token=')
-                })
-
-                token = token.split('=')[1]
-                token = 'Bearer ' + token
-
-                return token
-            }
-        },
         data() {
             return {
                 urlBase: 'http://localhost:8000/api/v1/marca',
@@ -240,17 +227,9 @@
                 }
             },
             carregarLista() {
-
-                let config = {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': this.token
-                    }
-                }
-
                 let url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro
 
-                axios.get(url, config)
+                axios.get(url)
                     .then(response => {
                         this.marcas = response.data
                     })
@@ -269,8 +248,6 @@
                 let config = {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        'Accept': 'application/json',
-                        'Authorization': this.token
                     }
                 }
 
@@ -297,19 +274,13 @@
 
                 if(!confirmacao) return false
 
-                let config = {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': this.token
-                    }
-                }
 
                 let formData = new FormData();
                 formData.append('_method', 'delete')
 
                 let url = this.urlBase + '/' + this.$store.state.item.id
 
-                axios.post(url, formData, config)
+                axios.post(url, formData)
                     .then(response => {
                         this.$store.state.transacao.status =  'sucesso'
                         this.$store.state.transacao.mensagem = response.data.success
@@ -323,7 +294,36 @@
                     })
             },
             atualizar(){
-                console.log(this.$store.state.item);
+                let formData = new FormData();
+                formData.append('_method', 'patch')
+                formData.append('nome', this.$store.state.item.nome)
+
+                if(this.arquivoImagem[0]) {
+                    formData.append('imagem', this.arquivoImagem[0])
+                }
+
+                let url = this.urlBase + '/' + this.$store.state.item.id
+
+                let config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+
+                axios.post(url, formData, config)
+                    .then(response => {
+                        this.$store.state.transacao.status = 'sucesso'
+                        this.$store.state.transacao.mensagem = 'Registro de marca atualizado com sucesso!'
+
+                        //limpar o campo de seleção de arquivos
+                        atualizarImagem.value = ''
+                        this.carregarLista()
+                    })
+                    .catch(errors => {
+                        this.$store.state.transacao.status = 'erro'
+                        this.$store.state.transacao.mensagem = errors.response.data.message
+                        this.$store.state.transacao.dados = errors.response.data.errors
+                    })
             }
         },
         mounted() {
